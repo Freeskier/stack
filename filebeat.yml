@@ -1,0 +1,23 @@
+filebeat.inputs:
+  - input_type: log
+    enabled: true
+    paths:
+      - /var/log/*.log
+    id: filebeat-stream
+    index: 'filebeat-%{+yyyy.MM.dd}'
+
+  - input_type: log
+    enabled: true
+    paths:
+      - /pcap/*.log
+      - /pcap/*.pcap
+    id: zeek-stream
+    index: 'zeek-%{+yyyy.MM.dd}'
+
+setup.template:
+  name: 'filebeat'
+  pattern: 'filebeat-*'
+  enabled: false
+
+output.logstash:
+  hosts: ['logstash:5044']

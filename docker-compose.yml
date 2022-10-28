@@ -1,0 +1,89 @@
+version: '3.6'
+services:
+  elasticsearch:
+    image: elasticsearch:7.17.7
+    container_name: elasticsearch
+    restart: always
+    volumes:
+      - ./elasticsearch.yml:/usr/share/elasticsearch/elasticsearch.yml
+    ports:
+      - 9200:9200
+      - 9300:9300
+    networks:
+      - elk
+    environment:
+      ES_JAVA_OPTS: '-Xmx256m -Xms256m'
+      discovery.type: single-node
+
+  logstash:
+    image: logstash:7.17.7
+    container_name: logstash
+    restart: always
+    volumes:
+      - ./logstash.yml:/usr/share/logstash/logstash.yml
+      - ./pipelines.yml:/usr/share/logstash/pipelines.yml
+      - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+    depends_on:
+      - elasticsearch
+    ports:
+      - 5044:5044
+    environment:
+      LS_JAVA_OPTS: '-Xmx256m -Xms256m'
+    networks:
+      - elk
+
+  kibana:
+    image: kibana:7.17.7
+    container_name: kibana
+    restart: always
+    volumes:
+      - ./kibana.yml:/usr/share/kibana/kibana.yml
+    ports:
+      - 5601:5601
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
+    networks:
+      - elk
+
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:7.17.7
+    container_name: filebeat
+    command: filebeat -e -strict.perms=false
+    restart: always
+    volumes:
+      - ./filebeat.yml:/usr/share/filebeat/filebeat.yml
+      - ./pcap:/pcap
+    networks:
+      - elk
+    links:
+      - logstash:logstash
+    depends_on:
+      - logstash
+
+  zeek:
+    container_name: zeek
+    depends_on:
+      - filebeat
+    #build: .
+    image: blacktop/zeek:elastic
+    volumes:
+      - ./pcap:/pcap
+      - ./local.zeek:/usr/local/zeek/share/zeek/site/local.zeek
+    cap_add:
+      - NET_ADMIN
+    network_mode: 'host'
+    command: -i af_packet::eth0 local
+
+  suricata:
+    container_name: suricata
+    image: jasonish/suricata:latest
+    volumes:
+      - ./pcap:/pcap
+    cap_add:
+      - NET_ADMIN
+    network_mode: 'host'
+
+networks:
+  elk:
