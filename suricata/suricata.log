@@ -1,0 +1,70 @@
+2/11/2022 -- 11:27:39 - <Notice> - This is Suricata version 6.0.8 RELEASE running in SYSTEM mode
+2/11/2022 -- 11:27:39 - <Info> - CPUs/cores online: 8
+2/11/2022 -- 11:27:39 - <Warning> - [ERRCODE: SC_ERR_CONF_YAML_ERROR(242)] - App-Layer protocol sip enable status not set, so enabling by default. This behavior will change in Suricata 7, so please update your config. See ticket #4744 for more details.
+2/11/2022 -- 11:27:39 - <Warning> - [ERRCODE: SC_ERR_CONF_YAML_ERROR(242)] - App-Layer protocol mqtt enable status not set, so enabling by default. This behavior will change in Suricata 7, so please update your config. See ticket #4744 for more details.
+2/11/2022 -- 11:27:39 - <Warning> - [ERRCODE: SC_ERR_CONF_YAML_ERROR(242)] - App-Layer protocol rdp enable status not set, so enabling by default. This behavior will change in Suricata 7, so please update your config. See ticket #4744 for more details.
+2/11/2022 -- 11:27:39 - <Info> - Found an MTU of 1500 for 'eth0'
+2/11/2022 -- 11:27:39 - <Info> - Found an MTU of 1500 for 'eth0'
+2/11/2022 -- 11:27:40 - <Info> - dropped the caps for main thread
+2/11/2022 -- 11:27:40 - <Info> - fast output device (regular) initialized: fast.log
+2/11/2022 -- 11:27:40 - <Info> - eve-log output device (regular) initialized: eve.json
+2/11/2022 -- 11:27:40 - <Info> - stats output device (regular) initialized: stats.log
+2/11/2022 -- 11:27:40 - <Info> - Running in live mode, activating unix socket
+2/11/2022 -- 11:27:55 - <Info> - 1 rule files processed. 28253 rules successfully loaded, 0 rules failed
+2/11/2022 -- 11:27:55 - <Info> - Threshold config parsed: 0 rule(s) found
+2/11/2022 -- 11:27:55 - <Info> - 28256 signatures processed. 1231 are IP-only rules, 5153 are inspecting packet payload, 21668 inspect application layer, 108 are decoder event only
+2/11/2022 -- 11:28:13 - <Info> - Going to use 8 thread(s)
+2/11/2022 -- 11:28:13 - <Info> - Running in live mode, activating unix socket
+2/11/2022 -- 11:28:13 - <Info> - Using unix socket file '/var/run/suricata/suricata-command.socket'
+2/11/2022 -- 11:28:13 - <Notice> - all 8 packet processing threads, 4 management threads initialized, engine started.
+2/11/2022 -- 11:28:14 - <Info> - All AFP capture threads are running.
+2/11/2022 -- 11:45:43 - <Notice> - Signal Received.  Stopping engine.
+2/11/2022 -- 11:45:44 - <Info> - time elapsed 1051.155s
+2/11/2022 -- 11:45:46 - <Info> - Alerts: 0
+2/11/2022 -- 11:45:46 - <Info> - cleaning up signature grouping structure... complete
+2/11/2022 -- 11:45:46 - <Notice> - Stats for 'eth0':  pkts: 304, drop: 0 (0.00%), invalid chksum: 0
+2/11/2022 -- 11:46:20 - <Notice> - This is Suricata version 6.0.8 RELEASE running in SYSTEM mode
+2/11/2022 -- 11:46:20 - <Info> - CPUs/cores online: 8
+2/11/2022 -- 11:46:20 - <Warning> - [ERRCODE: SC_ERR_CONF_YAML_ERROR(242)] - App-Layer protocol sip enable status not set, so enabling by default. This behavior will change in Suricata 7, so please update your config. See ticket #4744 for more details.
+2/11/2022 -- 11:46:20 - <Warning> - [ERRCODE: SC_ERR_CONF_YAML_ERROR(242)] - App-Layer protocol mqtt enable status not set, so enabling by default. This behavior will change in Suricata 7, so please update your config. See ticket #4744 for more details.
+2/11/2022 -- 11:46:20 - <Warning> - [ERRCODE: SC_ERR_CONF_YAML_ERROR(242)] - App-Layer protocol rdp enable status not set, so enabling by default. This behavior will change in Suricata 7, so please update your config. See ticket #4744 for more details.
+2/11/2022 -- 11:46:20 - <Info> - Found an MTU of 1500 for 'eth0'
+2/11/2022 -- 11:46:20 - <Info> - Found an MTU of 1500 for 'eth0'
+2/11/2022 -- 11:46:20 - <Info> - dropped the caps for main thread
+2/11/2022 -- 11:46:20 - <Info> - fast output device (regular) initialized: fast.log
+2/11/2022 -- 11:46:20 - <Info> - eve-log output device (regular) initialized: eve.json
+2/11/2022 -- 11:46:20 - <Info> - stats output device (regular) initialized: stats.log
+2/11/2022 -- 11:46:20 - <Info> - Running in live mode, activating unix socket
+2/11/2022 -- 11:46:31 - <Info> - 1 rule files processed. 28253 rules successfully loaded, 0 rules failed
+2/11/2022 -- 11:46:31 - <Info> - Threshold config parsed: 0 rule(s) found
+2/11/2022 -- 11:46:32 - <Info> - 28256 signatures processed. 1231 are IP-only rules, 5153 are inspecting packet payload, 21668 inspect application layer, 108 are decoder event only
+2/11/2022 -- 11:46:54 - <Info> - Going to use 8 thread(s)
+2/11/2022 -- 11:46:54 - <Info> - Running in live mode, activating unix socket
+2/11/2022 -- 11:46:54 - <Info> - Using unix socket file '/var/run/suricata/suricata-command.socket'
+2/11/2022 -- 11:46:54 - <Notice> - all 8 packet processing threads, 4 management threads initialized, engine started.
+2/11/2022 -- 11:46:55 - <Info> - All AFP capture threads are running.
+2/11/2022 -- 13:24:04 - <Notice> - Signal Received.  Stopping engine.
+2/11/2022 -- 13:24:04 - <Info> - time elapsed 5830.432s
+2/11/2022 -- 13:24:06 - <Info> - Alerts: 329
+2/11/2022 -- 13:24:07 - <Info> - cleaning up signature grouping structure... complete
+2/11/2022 -- 13:24:07 - <Notice> - Stats for 'eth0':  pkts: 296438, drop: 301 (0.10%), invalid chksum: 0
+2/11/2022 -- 13:24:16 - <Notice> - This is Suricata version 6.0.8 RELEASE running in SYSTEM mode
+2/11/2022 -- 13:24:16 - <Info> - CPUs/cores online: 8
+2/11/2022 -- 13:24:16 - <Warning> - [ERRCODE: SC_ERR_CONF_YAML_ERROR(242)] - App-Layer protocol sip enable status not set, so enabling by default. This behavior will change in Suricata 7, so please update your config. See ticket #4744 for more details.
+2/11/2022 -- 13:24:16 - <Warning> - [ERRCODE: SC_ERR_CONF_YAML_ERROR(242)] - App-Layer protocol mqtt enable status not set, so enabling by default. This behavior will change in Suricata 7, so please update your config. See ticket #4744 for more details.
+2/11/2022 -- 13:24:16 - <Warning> - [ERRCODE: SC_ERR_CONF_YAML_ERROR(242)] - App-Layer protocol rdp enable status not set, so enabling by default. This behavior will change in Suricata 7, so please update your config. See ticket #4744 for more details.
+2/11/2022 -- 13:24:16 - <Info> - Found an MTU of 1500 for 'eth0'
+2/11/2022 -- 13:24:16 - <Info> - Found an MTU of 1500 for 'eth0'
+2/11/2022 -- 13:24:16 - <Info> - dropped the caps for main thread
+2/11/2022 -- 13:24:16 - <Info> - fast output device (regular) initialized: fast.log
+2/11/2022 -- 13:24:16 - <Info> - eve-log output device (regular) initialized: eve.json
+2/11/2022 -- 13:24:16 - <Info> - stats output device (regular) initialized: stats.log
+2/11/2022 -- 13:24:16 - <Info> - Running in live mode, activating unix socket
+2/11/2022 -- 13:24:28 - <Info> - 1 rule files processed. 28253 rules successfully loaded, 0 rules failed
+2/11/2022 -- 13:24:28 - <Info> - Threshold config parsed: 0 rule(s) found
+2/11/2022 -- 13:24:28 - <Info> - 28256 signatures processed. 1231 are IP-only rules, 5153 are inspecting packet payload, 21668 inspect application layer, 108 are decoder event only
+2/11/2022 -- 13:24:56 - <Info> - Going to use 8 thread(s)
+2/11/2022 -- 13:24:56 - <Info> - Running in live mode, activating unix socket
+2/11/2022 -- 13:24:56 - <Info> - Using unix socket file '/var/run/suricata/suricata-command.socket'
+2/11/2022 -- 13:24:56 - <Notice> - all 8 packet processing threads, 4 management threads initialized, engine started.
+2/11/2022 -- 13:24:57 - <Info> - All AFP capture threads are running.

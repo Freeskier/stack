@@ -1,3 +1,7 @@
+# filebeat.config:
+#   modules:
+#     path: ${path.config}/modules.d/zeek.yml
+
 filebeat.inputs:
   - input_type: log
     enabled: true
@@ -13,6 +17,23 @@ filebeat.inputs:
       - /pcap/*.pcap
     id: zeek-stream
     index: 'zeek-%{+yyyy.MM.dd}'
+
+  - input_type: log
+    enabled: true
+    paths:
+      - /suricata/*.log
+      - /suricata/*.json
+    id: suricata-stream
+    index: 'suricata-%{+yyyy.MM.dd}'
+
+filebeat.modules:
+  - module: zeek
+    capture_loss:
+      enabled: false
+  - module: suricata
+    eve:
+      enabled: true
+      var.paths: ['/suricata/eve.json']
 
 setup.template:
   name: 'filebeat'

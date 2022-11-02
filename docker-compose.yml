@@ -50,11 +50,13 @@ services:
   filebeat:
     image: docker.elastic.co/beats/filebeat:7.17.7
     container_name: filebeat
-    command: filebeat -e -strict.perms=false
+    command: filebeat -e -strict.perms=false && filebeat modules enable zeek
     restart: always
     volumes:
-      - ./filebeat.yml:/usr/share/filebeat/filebeat.yml
-      - ./pcap:/pcap
+      - ./filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - ./pcap:/pcap:ro
+      - ./suricata:/suricata:ro
+      # - ./zeek.yml:/usr/share/filebeat/modules.d/zeek.yml
     networks:
       - elk
     links:
@@ -62,28 +64,42 @@ services:
     depends_on:
       - logstash
 
-  zeek:
-    container_name: zeek
-    depends_on:
-      - filebeat
-    #build: .
-    image: blacktop/zeek:elastic
-    volumes:
-      - ./pcap:/pcap
-      - ./local.zeek:/usr/local/zeek/share/zeek/site/local.zeek
-    cap_add:
-      - NET_ADMIN
-    network_mode: 'host'
-    command: -i af_packet::eth0 local
+  # zeek:
+  #   container_name: zeek
+  #   depends_on:
+  #     - filebeat
+  #   #build: .
+  #   image: blacktop/zeek:elastic
+  #   volumes:
+  #     - ./pcap:/pcap
+  #     - ./local.zeek:/usr/local/zeek/share/zeek/site/local.zeek
+  #   cap_add:
+  #     - NET_ADMIN
+  #   network_mode: 'host'
+  #   command: -i af_packet::eth0 local
 
   suricata:
     container_name: suricata
     image: jasonish/suricata:latest
     volumes:
-      - ./pcap:/pcap
+      - ./suricata:/var/log/suricata
     cap_add:
       - NET_ADMIN
+      - NET_RAW
+      - SYS_NICE
     network_mode: 'host'
+    command: -i eth0
 
+  arkime:
+    container_name: arkime
+    build: ./arkime
+    volumes:
+      - ./arkime:/var/log/arkime
+      - ./arkime:/opt/arkime/logs/
+    networks:
+      - elk
+    environment:
+      - PATH=/opt/arkime/bin
+    command: where easybutton-build.sh
 networks:
   elk:
