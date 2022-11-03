@@ -64,19 +64,18 @@ services:
     depends_on:
       - logstash
 
-  # zeek:
-  #   container_name: zeek
-  #   depends_on:
-  #     - filebeat
-  #   #build: .
-  #   image: blacktop/zeek:elastic
-  #   volumes:
-  #     - ./pcap:/pcap
-  #     - ./local.zeek:/usr/local/zeek/share/zeek/site/local.zeek
-  #   cap_add:
-  #     - NET_ADMIN
-  #   network_mode: 'host'
-  #   command: -i af_packet::eth0 local
+  zeek:
+    container_name: zeek
+    depends_on:
+      - filebeat
+    image: blacktop/zeek:elastic
+    volumes:
+      - ./pcap:/pcap
+      - ./local.zeek:/usr/local/zeek/share/zeek/site/local.zeek
+    cap_add:
+      - NET_ADMIN
+    network_mode: 'host'
+    command: -i af_packet::eth0 local
 
   suricata:
     container_name: suricata
@@ -92,14 +91,15 @@ services:
 
   arkime:
     container_name: arkime
-    build: ./arkime
+    image: mammo0/docker-arkime:latest
     volumes:
-      - ./arkime:/var/log/arkime
-      - ./arkime:/opt/arkime/logs/
-    networks:
-      - elk
+      - ./arkime/config:/data/config
+      - ./arkime/pcap:/data/pcap
+      - ./arkime/logs:/data/logs
+    #   - ./arkime/config/run_arkime.sh:/data/startarkime.sh
+    network_mode: 'host'
     environment:
-      - PATH=/opt/arkime/bin
-    command: where easybutton-build.sh
+      - CAPTURE=on
+      - OS_HOST=127.0.0.1
 networks:
   elk:
