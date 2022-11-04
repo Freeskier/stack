@@ -1,3 +1,6 @@
+#!/bin/bash
+
+
 ARG UBUNTU_VERSION=22.04
 FROM ubuntu:$UBUNTU_VERSION
 
@@ -14,7 +17,7 @@ ARG ARKIME_DEB_PACKAGE="arkime_"$ARKIME_VERSION"-1_amd64.deb"
 ENV ARKIME_VERSION $ARKIME_VERSION
 ENV OS_HOST "elasticsearch"
 ENV OS_PORT 9200
-ENV ARKIME_INTERFACE "eth0"
+ENV ARKIME_INTERFACE "ens160"
 ENV ARKIME_ADMIN_PASSWORD "admin"
 ENV ARKIME_HOSTNAME "localhost"
 ENV ARKIME_INSTALL_DIR "/DATA"
@@ -44,4 +47,4 @@ VOLUME ["/data/pcap", "/data/config", "/data/logs"]
 EXPOSE 8005
 WORKDIR $ARKIMEDIR
 
-ENTRYPOINT [ "/data/run_arkime.sh" ]
+ENTRYPOINT [ "/data/startarkime.sh" ]

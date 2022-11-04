@@ -75,7 +75,7 @@ services:
     cap_add:
       - NET_ADMIN
     network_mode: 'host'
-    command: -i af_packet::eth0 local
+    command: -i af_packet::ens160 local
 
   suricata:
     container_name: suricata
@@ -87,19 +87,23 @@ services:
       - NET_RAW
       - SYS_NICE
     network_mode: 'host'
-    command: -i eth0
+    command: -i ens160
 
   arkime:
     container_name: arkime
-    image: mammo0/docker-arkime:latest
+    build: ./arkime/
+    #image: mammo0/docker-arkime:latest
     volumes:
       - ./arkime/config:/data/config
       - ./arkime/pcap:/data/pcap
       - ./arkime/logs:/data/logs
-    #   - ./arkime/config/run_arkime.sh:/data/startarkime.sh
+      #- ./arkime/config/startarkime.sh:/data/startarkime.sh:rw
     network_mode: 'host'
+    entrypoint: /bin/bash
     environment:
       - CAPTURE=on
       - OS_HOST=127.0.0.1
+      - VIEWER=on
+      - ARKIME_INTERFACE=ens160
 networks:
   elk:

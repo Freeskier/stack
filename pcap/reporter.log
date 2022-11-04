@@ -1,3 +1,2 @@
-{"ts":1667473440.330971,"level":"Reporter::WARNING","message":"Your interface is likely receiving invalid TCP checksums, most likely from NIC checksum offloading.  By default, packets with invalid checksums are discarded by Zeek unless using the -C command-line option or toggling the 'ignore_checksums' variable.  Alternatively, disable checksum offloading by the network adapter to ensure Zeek analyzes the actual checksums that are transmitted.","location":"/usr/local/zeek/share/zeek/base/misc/find-checksum-offloading.zeek, line 54"}
-{"ts":1667473484.295279,"level":"Reporter::INFO","message":"received termination signal","location":""}
-{"ts":1667473484.295279,"level":"Reporter::INFO","message":"28 packets received on interface eth0, 0 (0.00%) dropped","location":""}
+{"ts":1667566261.331108,"level":"Reporter::INFO","message":"received termination signal","location":""}
+{"ts":1667566261.331108,"level":"Reporter::INFO","message":"499274 packets received on interface eth0, 0 (0.00%) dropped","location":""}
