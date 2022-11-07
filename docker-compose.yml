@@ -50,7 +50,7 @@ services:
   filebeat:
     image: docker.elastic.co/beats/filebeat:7.17.7
     container_name: filebeat
-    command: filebeat -e -strict.perms=false && filebeat modules enable zeek
+    command: filebeat -e -strict.perms=false
     restart: always
     volumes:
       - ./filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
