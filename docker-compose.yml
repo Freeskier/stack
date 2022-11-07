@@ -91,19 +91,21 @@ services:
 
   arkime:
     container_name: arkime
-    build: ./arkime/
-    #image: mammo0/docker-arkime:latest
+    #build: ./arkime/
+    image: mammo0/docker-arkime:latest
     volumes:
       - ./arkime/config:/data/config
       - ./arkime/pcap:/data/pcap
       - ./arkime/logs:/data/logs
-      #- ./arkime/config/startarkime.sh:/data/startarkime.sh:rw
+      - ./arkime/scripts/startarkime.sh:/data/startarkime.sh:rw
     network_mode: 'host'
-    entrypoint: /bin/bash
+    #entrypoint: /bin/bash
     environment:
       - CAPTURE=on
       - OS_HOST=127.0.0.1
       - VIEWER=on
       - ARKIME_INTERFACE=ens160
+      - ES_HOST=elasticsearch
+      - ES_PORT=9200
 networks:
   elk:

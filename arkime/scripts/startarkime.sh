@@ -2,6 +2,7 @@
 
 
 echo "Giving OS time to start..."
+echo "Giving duppppa time to start..."
 until curl -sS "http://$OS_HOST:$OS_PORT/_cluster/health?wait_for_status=yellow" > /dev/null 2>&1
 do
     echo "Waiting for OS to start"
@@ -11,6 +12,7 @@ done
 echo
 echo "OS started..."
 
+
 # set runtime environment variables
 export ARKIME_PASSWORD=$(tr -cd '[:alnum:]' < /dev/urandom | fold -w32 | head -n1)  # random password
 export ARKIME_LOCALELASTICSEARCH=no
@@ -18,6 +20,7 @@ export ARKIME_ELASTICSEARCH="http://"$OS_HOST":"$OS_PORT
 export ARKIME_INET=no
 
 if [ ! -f $ARKIMEDIR/etc/.initialized ]; then
+    echo "Configuring......."
     echo -e "$ARKIME_LOCALELASTICSEARCH\n$ARKIME_INET" | $ARKIMEDIR/bin/Configure
     echo INIT | $ARKIMEDIR/db/db.pl http://$OS_HOST:$OS_PORT init
     $ARKIMEDIR/bin/arkime_add_user.sh admin "Admin User" $ARKIME_ADMIN_PASSWORD --admin
@@ -36,6 +39,9 @@ else
         echo $ARKIME_VERSION > $ARKIMEDIR/etc/.initialized
     fi
 fi
+echo INIT | $ARKIMEDIR/db/db.pl http://$OS_HOST:$OS_PORT init
+#exec $ARKIMEDIR/db/db.pl http://$OS_HOST:$OS_PORT upgrade
+
 
 # start cron daemon for logrotate
 service cron start
