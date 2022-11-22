@@ -1,0 +1,19 @@
+version: '3.6'
+
+services:
+  certs:
+    container_name: certs
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.7
+    command: bash /usr/share/elasticsearch/config/setup.sh
+    user: '0'
+    volumes:
+      - ./elasticsearch/secrets:/secrets/
+      - ./elasticsearch/config/setup.sh:/usr/share/elasticsearch/config/setup.sh
+      - ./elasticsearch/config/instances.yml:/usr/share/elasticsearch/config/instances.yml:ro
+    environment:
+      ELASTIC_PASSWORD: ${ELASTICSEARCH_PASS}
+    networks:
+      - elk
+
+networks:
+  elk:

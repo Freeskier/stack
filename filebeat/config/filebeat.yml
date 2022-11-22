@@ -1,0 +1,51 @@
+# filebeat.config:
+#   modules:
+#     path: ${path.config}/modules.d/zeek.yml
+
+filebeat.inputs:
+  - input_type: log
+    enabled: true
+    paths:
+      - /logs/arkime/*.log
+      - /logs/suricata/suricata/*.log
+      - /logs/suricata/suricata/*.json
+    id: filebeat-stream
+    index: 'filebeat-%{+yyyy.MM.dd}'
+
+  - input_type: log
+    enabled: true
+    paths:
+      - /pcap/*.log
+      - /pcap/*.pcap
+    id: zeek-stream
+    index: 'zeek-%{+yyyy.MM.dd}'
+
+  - input_type: log
+    enabled: true
+    paths:
+      - /suricata/*.log
+      - /suricata/*.json
+    id: suricata-stream
+    index: 'suricata-%{+yyyy.MM.dd}'
+
+filebeat.modules:
+  - module: zeek
+    capture_loss:
+      enabled: false
+  - module: suricata
+    eve:
+      enabled: true
+      var.paths: ['/suricata/eve.json']
+
+setup.template:
+  name: 'filebeat'
+  pattern: 'filebeat-*'
+  enabled: false
+
+output.logstash:
+  hosts: ['logstash:5088']
+  ssl.certificate_authorities:
+    - /usr/share/filebeat/config/certs/certificates/ca/ca.crt
+  enabled: true
+  ssl.certificate: '/usr/share/filebeat/config/certs/certificates/filebeat/filebeat.crt'
+  ssl.key: '/usr/share/filebeat/config/certs/certificates/filebeat/filebeat.key'

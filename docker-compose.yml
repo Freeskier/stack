@@ -1,32 +1,55 @@
 version: '3.6'
 services:
+  # certs:
+  #   container_name: certs
+  #   image: docker.elastic.co/elasticsearch/elasticsearch:7.17.7
+  #   command: bash /usr/share/elasticsearch/config/setup.sh
+  #   user: '0'
+  #   volumes:
+  #     - ./elasticsearch/secrets:/secrets/
+  #     - ./elasticsearch/config/setup.sh:/usr/share/elasticsearch/config/setup.sh
+  #     - ./elasticsearch/config/instances.yml:/usr/share/elasticsearch/config/instances.yml:ro
+  #   environment:
+  #     ELASTIC_PASSWORD: ${ELASTICSEARCH_PASS}
+  #   networks:
+  #     - elk
   elasticsearch:
     image: elasticsearch:7.17.7
     container_name: elasticsearch
-    restart: always
+    hostname: elasticsearch
+    stdin_open: true
+    tty: true
     volumes:
-      - ./elasticsearch.yml:/usr/share/elasticsearch/elasticsearch.yml
+      - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
+      - ./elasticsearch/secrets/elasticsearch.keystore:/usr/share/elasticsearch/config/elasticsearch.keystore:ro
+      - ./elasticsearch/secrets:/usr/share/elasticsearch/config/certs
     ports:
-      - 9200:9200
-      - 9300:9300
+      - ${ELASTICSEARCH_PORT}:9200
     networks:
       - elk
     environment:
       ES_JAVA_OPTS: '-Xmx256m -Xms256m'
       discovery.type: single-node
+    # depends_on:
+    #   - certs
 
   logstash:
     image: logstash:7.17.7
     container_name: logstash
+    hostname: logstash
+    stdin_open: true
+    tty: true
     restart: always
     volumes:
-      - ./logstash.yml:/usr/share/logstash/logstash.yml
-      - ./pipelines.yml:/usr/share/logstash/pipelines.yml
-      - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+      - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
+      - ./logstash/config/pipelines.yml:/usr/share/logstash/config/pipelines.yml
+      - ./logstash/config/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+      - ./elasticsearch/secrets:/usr/share/logstash/config/certs:ro
     depends_on:
       - elasticsearch
+      #- certs
     ports:
-      - 5044:5044
+      - ${LOGSTASH_PORT}:5044
     environment:
       LS_JAVA_OPTS: '-Xmx256m -Xms256m'
     networks:
@@ -35,13 +58,15 @@ services:
   kibana:
     image: kibana:7.17.7
     container_name: kibana
+    hostname: kibana
+    stdin_open: true
+    tty: true
     restart: always
     volumes:
-      - ./kibana.yml:/usr/share/kibana/kibana.yml
+      - ./kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml
+      - ./elasticsearch/secrets:/usr/share/kibana/config/certs
     ports:
-      - 5601:5601
-    environment:
-      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - ${KIBANA_PORT}:5601
     depends_on:
       - elasticsearch
     networks:
@@ -50,13 +75,17 @@ services:
   filebeat:
     image: docker.elastic.co/beats/filebeat:7.17.7
     container_name: filebeat
+    hostname: filebeat
+    stdin_open: true
+    tty: true
     command: filebeat -e -strict.perms=false
     restart: always
     volumes:
-      - ./filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
-      - ./pcap:/pcap:ro
-      - ./suricata:/suricata:ro
-      # - ./zeek.yml:/usr/share/filebeat/modules.d/zeek.yml
+      - ./filebeat/config/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - ./zeek/pcap:/pcap:rw
+      - ./suricata/logs:/logs/suricata:rw
+      - ./arkime/logs:/logs/arkime:rw
+      - ./elasticsearch/secrets:/usr/share/filebeat/config/certs
     networks:
       - elk
     links:
@@ -66,46 +95,56 @@ services:
 
   zeek:
     container_name: zeek
+    hostname: zeek
+    stdin_open: true
+    tty: true
     depends_on:
       - filebeat
     image: blacktop/zeek:elastic
     volumes:
-      - ./pcap:/pcap
-      - ./local.zeek:/usr/local/zeek/share/zeek/site/local.zeek
+      - ./zeek/pcap:/pcap
+      - ./zeek/config/local.zeek:/usr/local/zeek/share/zeek/site/local.zeek
     cap_add:
       - NET_ADMIN
     network_mode: 'host'
-    command: -i af_packet::ens160 local
+    command: -i af_packet::${HOST_INTERFACE} local
 
   suricata:
     container_name: suricata
+    hostname: suricata
+    stdin_open: true
+    tty: true
     image: jasonish/suricata:latest
     volumes:
-      - ./suricata:/var/log/suricata
+      - ./suricata/logs/suricata:/var/log/suricata
     cap_add:
       - NET_ADMIN
       - NET_RAW
       - SYS_NICE
     network_mode: 'host'
-    command: -i ens160
+    command: -i ${HOST_INTERFACE}
 
   arkime:
     container_name: arkime
-    #build: ./arkime/
+    hostname: arkime
+    stdin_open: true
+    tty: true
     image: mammo0/docker-arkime:latest
     volumes:
       - ./arkime/config:/data/config
       - ./arkime/pcap:/data/pcap
       - ./arkime/logs:/data/logs
       - ./arkime/scripts/startarkime.sh:/data/startarkime.sh:rw
+      - ./elasticsearch/secrets:/usr/share/arkime/config/certs
     network_mode: 'host'
-    #entrypoint: /bin/bash
     environment:
       - CAPTURE=on
-      - OS_HOST=127.0.0.1
+      - OS_HOST=${HOST_ADDR}
       - VIEWER=on
-      - ARKIME_INTERFACE=ens160
+      - ARKIME_INTERFACE=${HOST_INTERFACE}
       - ES_HOST=elasticsearch
-      - ES_PORT=9200
+      - ES_PORT=${ELASTICSEARCH_PORT}
+    depends_on:
+      - elasticsearch
 networks:
   elk:

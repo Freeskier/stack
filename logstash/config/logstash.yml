@@ -1,0 +1,10 @@
+http.host: '0.0.0.0'
+http.port: 5044
+xpack.monitoring.elasticsearch.hosts: ['https://elasticsearch:9200']
+
+xpack.management.elasticsearch.username: 'elastic'
+xpack.management.elasticsearch.password: '123qweASD'
+
+xpack.monitoring.elasticsearch.username: 'elastic'
+xpack.monitoring.elasticsearch.password: '123qweASD'
+xpack.monitoring.elasticsearch.ssl.certificate_authority: '/usr/share/logstash/config/certs/certificates/ca/ca.crt'

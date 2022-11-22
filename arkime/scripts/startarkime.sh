@@ -1,12 +1,14 @@
 #!/bin/bash
+#curl --cacert /usr/share/arkime/config/certs/certificates/ca/ca.crt -u 'elastic':'123qweASD' -sS "https://127.0.0.1:9200/_cluster/health?wait_for_status=yellow"
+# echo "Initializing db on ES..."
+# echo INIT | /opt/arkime/db/db.pl --clientcert /usr/share/arkime/config/certs/certificates/ca/ca.crt --esuser 'elastic':'123qweASD' "https://127.0.0.1:9200/_cluster/health?wait_for_status=yellow" init
+#$ARKIMEDIR/db/db.pl https://elastic:123qweASD@127.0.0.1:9200 init
 
 
 echo "Giving OS time to start..."
-echo "Giving duppppa time to start..."
-until curl -sS "http://$OS_HOST:$OS_PORT/_cluster/health?wait_for_status=yellow" > /dev/null 2>&1
+until curl --cacert /usr/share/arkime/config/certs/certificates/ca/ca.crt -sS "http://elastic:123qweASD@127.0.0.1:9200/_cluster/health?wait_for_status=yellow" > /dev/null 2>&1
 do
     echo "Waiting for OS to start"
-    echo "dupa"
     sleep 1
 done
 echo
@@ -16,13 +18,13 @@ echo "OS started..."
 # set runtime environment variables
 export ARKIME_PASSWORD=$(tr -cd '[:alnum:]' < /dev/urandom | fold -w32 | head -n1)  # random password
 export ARKIME_LOCALELASTICSEARCH=no
-export ARKIME_ELASTICSEARCH="http://"$OS_HOST":"$OS_PORT
+export ARKIME_ELASTICSEARCH="https://"$OS_HOST":"$OS_PORT
 export ARKIME_INET=no
 
 if [ ! -f $ARKIMEDIR/etc/.initialized ]; then
     echo "Configuring......."
     echo -e "$ARKIME_LOCALELASTICSEARCH\n$ARKIME_INET" | $ARKIMEDIR/bin/Configure
-    echo INIT | $ARKIMEDIR/db/db.pl http://$OS_HOST:$OS_PORT init
+    echo INIT | $ARKIMEDIR/db/db.pl https://elastic:123qweASD@127.0.0.1:9200/ init
     $ARKIMEDIR/bin/arkime_add_user.sh admin "Admin User" $ARKIME_ADMIN_PASSWORD --admin
     echo $ARKIME_VERSION > $ARKIMEDIR/etc/.initialized
 else
@@ -35,11 +37,11 @@ else
     if [ "$old_ver" != "$newer_ver" ]; then
         echo "Upgrading OS database..."
         echo -e "$ARKIME_LOCALELASTICSEARCH\n$ARKIME_INET" | $ARKIMEDIR/bin/Configure
-        $ARKIMEDIR/db/db.pl http://$OS_HOST:$OS_PORT upgradenoprompt
+        $ARKIMEDIR/db/db.pl https://$OS_HOST:$OS_PORT upgradenoprompt
         echo $ARKIME_VERSION > $ARKIMEDIR/etc/.initialized
     fi
 fi
-echo INIT | $ARKIMEDIR/db/db.pl http://$OS_HOST:$OS_PORT init
+echo INIT | $ARKIMEDIR/db/db.pl https://$OS_HOST:$OS_PORT init
 #exec $ARKIMEDIR/db/db.pl http://$OS_HOST:$OS_PORT upgrade
 
 
