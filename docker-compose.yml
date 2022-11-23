@@ -37,14 +37,16 @@ services:
     image: logstash:7.17.7
     container_name: logstash
     hostname: logstash
+    privileged: true
     stdin_open: true
     tty: true
     restart: always
+    #command: chmod 777 /usr/share/kibana/config/certs/certificates/logstash/logstash.pkcs8.key
     volumes:
       - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
       - ./logstash/config/pipelines.yml:/usr/share/logstash/config/pipelines.yml
       - ./logstash/config/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
-      - ./elasticsearch/secrets:/usr/share/logstash/config/certs:ro
+      - ./elasticsearch/secrets:/usr/share/logstash/config/certs:rw
     depends_on:
       - elasticsearch
       #- certs
@@ -127,7 +129,10 @@ services:
   arkime:
     container_name: arkime
     hostname: arkime
+    #command: 'apt-get update && apt-get -y install libperl-LWP-Protocol-https && libperl-Crypt-SSLeay'
     stdin_open: true
+    ports:
+      - 8005:8005
     tty: true
     image: mammo0/docker-arkime:latest
     volumes:
@@ -136,13 +141,14 @@ services:
       - ./arkime/logs:/data/logs
       - ./arkime/scripts/startarkime.sh:/data/startarkime.sh:rw
       - ./elasticsearch/secrets:/usr/share/arkime/config/certs
+      #- ./arkime/db.pl:/opt/arkime/db/db.pl:rw
     network_mode: 'host'
     environment:
       - CAPTURE=on
       - OS_HOST=${HOST_ADDR}
-      - VIEWER=on
+      - VIEWER=off
       - ARKIME_INTERFACE=${HOST_INTERFACE}
-      - ES_HOST=elasticsearch
+      - ES_HOST=localhost
       - ES_PORT=${ELASTICSEARCH_PORT}
     depends_on:
       - elasticsearch
