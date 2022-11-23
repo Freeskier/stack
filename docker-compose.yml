@@ -19,6 +19,10 @@ services:
     hostname: elasticsearch
     stdin_open: true
     tty: true
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
     volumes:
       - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
       - ./elasticsearch/secrets/elasticsearch.keystore:/usr/share/elasticsearch/config/elasticsearch.keystore:ro
@@ -129,20 +133,29 @@ services:
   arkime:
     container_name: arkime
     hostname: arkime
-    #command: 'apt-get update && apt-get -y install libperl-LWP-Protocol-https && libperl-Crypt-SSLeay'
+    command: 'sysctl -w vm.max_map_count=262144'
     stdin_open: true
     ports:
       - 8005:8005
     tty: true
+    privileged: true
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
     image: mammo0/docker-arkime:latest
     volumes:
       - ./arkime/config:/data/config
       - ./arkime/pcap:/data/pcap
       - ./arkime/logs:/data/logs
-      - ./arkime/scripts/startarkime.sh:/data/startarkime.sh:rw
       - ./elasticsearch/secrets:/usr/share/arkime/config/certs
+      - ./arkime/startarkime.sh:/data/startarkime.sh
       #- ./arkime/db.pl:/opt/arkime/db/db.pl:rw
     network_mode: 'host'
+    deploy:
+      resources:
+        reservations:
+          memory: 800M
     environment:
       - CAPTURE=on
       - OS_HOST=${HOST_ADDR}
