@@ -157,10 +157,6 @@ services:
       #- ./arkime/db.pl:/opt/arkime/db/db.pl:rw
     networks:
       - elk
-    deploy:
-      resources:
-        reservations:
-          memory: 800M
     environment:
       - CAPTURE=on
       - OS_HOST=elasticsearch
