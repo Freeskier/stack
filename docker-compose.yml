@@ -55,7 +55,7 @@ services:
       - elasticsearch
       #- certs
     ports:
-      - ${LOGSTASH_PORT}:5044
+      - ${LOGSTASH_PORT}:5088
     environment:
       LS_JAVA_OPTS: '-Xmx256m -Xms256m'
     networks:
@@ -138,6 +138,10 @@ services:
     ports:
       - 8005:8005
     tty: true
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+      - SYS_NICE
     privileged: true
     ulimits:
       memlock:
@@ -151,17 +155,18 @@ services:
       - ./elasticsearch/secrets:/usr/share/arkime/config/certs
       - ./arkime/startarkime.sh:/data/startarkime.sh
       #- ./arkime/db.pl:/opt/arkime/db/db.pl:rw
-    network_mode: 'host'
+    networks:
+      - elk
     deploy:
       resources:
         reservations:
           memory: 800M
     environment:
       - CAPTURE=on
-      - OS_HOST=${HOST_ADDR}
-      - VIEWER=off
+      - OS_HOST=elasticsearch
+      - VIEWER=on
       - ARKIME_INTERFACE=${HOST_INTERFACE}
-      - ES_HOST=localhost
+      - ES_HOST=elasticsearch
       - ES_PORT=${ELASTICSEARCH_PORT}
     depends_on:
       - elasticsearch

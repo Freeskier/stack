@@ -1,7 +1,7 @@
 #!/bin/bash
 
-echo "Giving OS time to start..."
-until curl --cacert /usr/share/arkime/config/certs/certificates/ca/ca.crt -sS "https://elastic:123qweASD@127.0.0.1:9200/_cluster/health?wait_for_status=yellow" > /dev/null 2>&1
+echo "Giving OS time to startasd..."
+until curl --cacert /usr/share/arkime/config/certs/certificates/ca/ca.crt -sS "https://elastic:123qweASD@elasticsearch:9200/_cluster/health?wait_for_status=yellow" > /dev/null 2>&1
 do
     echo "Waiting for OS to start"
     sleep 1
@@ -19,7 +19,7 @@ export ARKIME_INET=no
 if [ ! -f $ARKIMEDIR/etc/.initialized ]; then
     echo "Configuring......."
     echo -e "$ARKIME_LOCALELASTICSEARCH\n$ARKIME_INET" | $ARKIMEDIR/bin/Configure
-    echo INIT | $ARKIMEDIR/db/db.pl --clientcert /usr/share/arkime/config/certs/certificates/arkime/arkime.crt --clientkey /usr/share/arkime/config/certs/certificates/arkime/arkime.key --insecure --esuser elastic:123qweASD https://localhost:9200 init
+    echo INIT | $ARKIMEDIR/db/db.pl --clientcert /usr/share/arkime/config/certs/certificates/arkime/arkime.crt --clientkey /usr/share/arkime/config/certs/certificates/arkime/arkime.key --insecure --esuser elastic:123qweASD https://elasticsearch:9200 init
     $ARKIMEDIR/bin/arkime_add_user.sh admin "Admin User" $ARKIME_ADMIN_PASSWORD --admin
     echo $ARKIME_VERSION > $ARKIMEDIR/etc/.initialized
 else
@@ -32,7 +32,7 @@ else
     if [ "$old_ver" != "$newer_ver" ]; then
         echo "Upgrading OS database..."
         echo -e "$ARKIME_LOCALELASTICSEARCH\n$ARKIME_INET" | $ARKIMEDIR/bin/Configure
-        $ARKIMEDIR/db/db.pl --clientcert /usr/share/arkime/config/certs/certificates/arkime/arkime.crt --clientkey /usr/share/arkime/config/certs/certificates/arkime/arkime.key --insecure --esuser elastic:123qweASD https://localhost:9200 init upgradenoprompt
+        $ARKIMEDIR/db/db.pl --clientcert /usr/share/arkime/config/certs/certificates/arkime/arkime.crt --clientkey /usr/share/arkime/config/certs/certificates/arkime/arkime.key --insecure --esuser elastic:123qweASD https://elasticsearch:9200 init upgradenoprompt
         echo $ARKIME_VERSION > $ARKIMEDIR/etc/.initialized
     fi
 fi
@@ -59,7 +59,7 @@ fi
 echo "Look at log files for errors"
 echo "  /data/logs/viewer.log"
 echo "  /data/logs/capture.log"
-echo "Visit http://127.0.0.1:8005 with your favorite browser."
+echo "Visit http://arkime:8005 with your favorite browser."
 echo "  user: admin"
 echo "  password: $ARKIME_ADMIN_PASSWORD"
 
