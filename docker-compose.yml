@@ -155,14 +155,13 @@ services:
       - ./elasticsearch/secrets:/usr/share/arkime/config/certs
       - ./arkime/startarkime.sh:/data/startarkime.sh
       #- ./arkime/db.pl:/opt/arkime/db/db.pl:rw
-    networks:
-      - elk
+    network_mode: 'host'
     environment:
       - CAPTURE=on
-      - OS_HOST=elasticsearch
+      - OS_HOST=localhost
       - VIEWER=on
       - ARKIME_INTERFACE=${HOST_INTERFACE}
-      - ES_HOST=elasticsearch
+      - ES_HOST=localhost
       - ES_PORT=${ELASTICSEARCH_PORT}
     depends_on:
       - elasticsearch
