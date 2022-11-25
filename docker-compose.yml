@@ -137,8 +137,6 @@ services:
     container_name: arkime
     hostname: arkime
     stdin_open: true
-    ports:
-      - 8005:8005
     tty: true
     cap_add:
       - NET_ADMIN
