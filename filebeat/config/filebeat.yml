@@ -15,8 +15,7 @@ filebeat.inputs:
   - input_type: log
     enabled: true
     paths:
-      - /pcap/*.log
-      - /pcap/*.pcap
+      - /logs/zeek/*.log
     id: zeek-stream
     index: 'zeek-%{+yyyy.MM.dd}'
 

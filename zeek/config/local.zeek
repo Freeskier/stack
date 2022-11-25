@@ -6,7 +6,7 @@
 # the creation of file IDs. Please change this to a hard to guess value.
 redef digest_salt = "blacktop";
 
-# redef Site::local_nets += { 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16 };
+redef Site::local_nets += { 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16 };
 
 
 # This script logs which scripts were loaded during each run.

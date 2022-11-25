@@ -28,14 +28,12 @@ services:
       - ./elasticsearch/secrets/elasticsearch.keystore:/usr/share/elasticsearch/config/elasticsearch.keystore:ro
       - ./elasticsearch/secrets:/usr/share/elasticsearch/config/certs
     ports:
-      - ${ELASTICSEARCH_PORT}:9200
+      - 9200:9200
     networks:
       - elk
     environment:
       ES_JAVA_OPTS: '-Xmx256m -Xms256m'
       discovery.type: single-node
-    # depends_on:
-    #   - certs
 
   logstash:
     image: logstash:7.17.7
@@ -45,7 +43,6 @@ services:
     stdin_open: true
     tty: true
     restart: always
-    #command: chmod 777 /usr/share/kibana/config/certs/certificates/logstash/logstash.pkcs8.key
     volumes:
       - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
       - ./logstash/config/pipelines.yml:/usr/share/logstash/config/pipelines.yml
@@ -53,11 +50,13 @@ services:
       - ./elasticsearch/secrets:/usr/share/logstash/config/certs:rw
     depends_on:
       - elasticsearch
-      #- certs
     ports:
-      - ${LOGSTASH_PORT}:5088
+      - 5088:5088
     environment:
-      LS_JAVA_OPTS: '-Xmx256m -Xms256m'
+      - ELASTICSEARCH_USER=${ELASTICSEARCH_USER}
+      - ELASTICSEARCH_PASS=${ELASTICSEARCH_PASS}
+      - HOST_ADDR=${HOST_ADDR}
+      - LS_JAVA_OPTS: '-Xmx256m -Xms256m'
     networks:
       - elk
 
@@ -72,9 +71,13 @@ services:
       - ./kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml
       - ./elasticsearch/secrets:/usr/share/kibana/config/certs
     ports:
-      - ${KIBANA_PORT}:5601
+      - 5601:5601
     depends_on:
       - elasticsearch
+    environment:
+      - ELASTICSEARCH_USER=${ELASTICSEARCH_USER}
+      - ELASTICSEARCH_PASS=${ELASTICSEARCH_PASS}
+      - HOST_ADDR=${HOST_ADDR}
     networks:
       - elk
 
@@ -88,7 +91,7 @@ services:
     restart: always
     volumes:
       - ./filebeat/config/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
-      - ./zeek/pcap:/pcap:rw
+      - ./zeek/logs:/logs/zeek:rw
       - ./suricata/logs:/logs/suricata:rw
       - ./arkime/logs:/logs/arkime:rw
       - ./elasticsearch/secrets:/usr/share/filebeat/config/certs
@@ -104,16 +107,16 @@ services:
     hostname: zeek
     stdin_open: true
     tty: true
-    depends_on:
-      - filebeat
     image: blacktop/zeek:elastic
     volumes:
-      - ./zeek/pcap:/pcap
+      - ./zeek/logs:/pcap
       - ./zeek/config/local.zeek:/usr/local/zeek/share/zeek/site/local.zeek
     cap_add:
       - NET_ADMIN
     network_mode: 'host'
     command: -i af_packet::${HOST_INTERFACE} local
+    depends_on:
+      - filebeat
 
   suricata:
     container_name: suricata
@@ -122,7 +125,7 @@ services:
     tty: true
     image: jasonish/suricata:latest
     volumes:
-      - ./suricata/logs/suricata:/var/log/suricata
+      - ./suricata/logs:/var/log/suricata
     cap_add:
       - NET_ADMIN
       - NET_RAW
@@ -133,7 +136,6 @@ services:
   arkime:
     container_name: arkime
     hostname: arkime
-    command: 'sysctl -w vm.max_map_count=262144'
     stdin_open: true
     ports:
       - 8005:8005
@@ -147,22 +149,25 @@ services:
       memlock:
         soft: -1
         hard: -1
+    entrypoint: ''
+    command: sh -c "/data/parseenv.sh /data/config.ini /data/config/config.ini && /data/startarkime.sh"
     image: mammo0/docker-arkime:latest
     volumes:
-      - ./arkime/config:/data/config
+      - ./arkime/config.ini:/data/config.ini
       - ./arkime/pcap:/data/pcap
       - ./arkime/logs:/data/logs
-      - ./elasticsearch/secrets:/usr/share/arkime/config/certs
       - ./arkime/startarkime.sh:/data/startarkime.sh
-      #- ./arkime/db.pl:/opt/arkime/db/db.pl:rw
+      - ./arkime/parseenv.sh:/data/parseenv.sh:ro
+      - ./elasticsearch/secrets:/usr/share/arkime/config/certs
     network_mode: 'host'
     environment:
       - CAPTURE=on
-      - OS_HOST=localhost
       - VIEWER=on
-      - ARKIME_INTERFACE=${HOST_INTERFACE}
-      - ES_HOST=localhost
-      - ES_PORT=${ELASTICSEARCH_PORT}
+      - HOST_INTERFACE=${HOST_INTERFACE}
+      - ES_HOST=${ELASTICSEARCH_HOST}
+      - ELASTICSEARCH_USER=${ELASTICSEARCH_USER}
+      - ELASTICSEARCH_PASS=${ELASTICSEARCH_PASS}
+      - ARKIME_PASS=${ARKIME_PASS}
     depends_on:
       - elasticsearch
 networks:
