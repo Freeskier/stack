@@ -1,10 +1,8 @@
 server.host: 'kibana'
 server.name: 'kibana'
 server.shutdownTimeout: '5s'
-elasticsearch.hosts: ['https://${HOST_ADDR}:9200', 'https://elasticsearch:9200']
+elasticsearch.hosts: ['https://elasticsearch:9200']
 monitoring.ui.container.elasticsearch.enabled: true
-server.publicBaseUrl: 'https://${HOST_ADDR}:9200'
-
 server.ssl.enabled: true
 server.ssl.certificate: /usr/share/kibana/config/certs/certificates/kibana/kibana.crt
 server.ssl.key: /usr/share/kibana/config/certs/certificates/kibana/kibana.key
