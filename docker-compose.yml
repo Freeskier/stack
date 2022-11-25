@@ -53,10 +53,10 @@ services:
     ports:
       - 5088:5088
     environment:
-      - ELASTICSEARCH_USER=${ELASTICSEARCH_USER}
-      - ELASTICSEARCH_PASS=${ELASTICSEARCH_PASS}
-      - HOST_ADDR=${HOST_ADDR}
-      - LS_JAVA_OPTS: '-Xmx256m -Xms256m'
+      ELASTICSEARCH_USER: ${ELASTICSEARCH_USER}
+      ELASTICSEARCH_PASS: ${ELASTICSEARCH_PASS}
+      HOST_ADDR: ${HOST_ADDR}
+      LS_JAVA_OPTS: '-Xmx256m -Xms256m'
     networks:
       - elk
 
