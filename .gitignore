@@ -1,3 +1,4 @@
 *.log
 .initialized
 eve.json
+*.pcap.gz
