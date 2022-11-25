@@ -5,7 +5,7 @@
 After cloning from github, firstly you need to give Arkime's scripts permission in order to execute. 
 
 ```bash
-  sudo chmod +x /arkime -R
+  sudo chmod +x arkime -R
 ```
 Next adjust ```.env``` file by specifing interface you want to listen on.
 ```bash
