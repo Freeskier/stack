@@ -149,14 +149,14 @@ services:
         soft: -1
         hard: -1
     entrypoint: ''
-    command: sh -c "/data/parseenv.sh /data/config.ini /data/config/config.ini && /data/startarkime.sh"
+    command: sh -c "chmod +x /data -R && /data/parseenv.sh /data/config.ini /data/config/config.ini && /data/startarkime.sh"
     image: mammo0/docker-arkime:latest
     volumes:
       - ./arkime/config.ini:/data/config.ini
       - ./arkime/pcap:/data/pcap
       - ./arkime/logs:/data/logs
-      - ./arkime/startarkime.sh:/data/startarkime.sh
-      - ./arkime/parseenv.sh:/data/parseenv.sh:ro
+      - ./arkime/startarkime.sh:/data/startarkime.sh:rw
+      - ./arkime/parseenv.sh:/data/parseenv.sh:rw
       - ./elasticsearch/secrets:/usr/share/arkime/config/certs
     network_mode: 'host'
     environment:
