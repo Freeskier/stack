@@ -137,6 +137,7 @@ services:
     container_name: arkime
     hostname: arkime
     stdin_open: true
+    restart: always
     tty: true
     cap_add:
       - NET_ADMIN
