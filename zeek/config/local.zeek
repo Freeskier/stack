@@ -132,42 +132,41 @@ event zeek_init()
   ##! Add countries for the originator and responder of a connection
 ##! to the connection logs.
 
-module Conn;
+#module Conn;
 
-export {
-	redef record Conn::Info += {
-		## Country code for the originator of the connection based
-		## on a GeoIP lookup.
-		orig_cc: string &optional &log;
-		## Country code for the responser of the connection based
-		## on a GeoIP lookup.
-		resp_cc: string &optional &log;
-		## City for the originator of the connection based
-		## on a GeoIP lookup.
-		orig_city: string &optional &log;
-		## Cityfor the responser of the connection based
-		## on a GeoIP lookup.
-		resp_city: string &optional &log;
-		## City for the originator of the connection based
-		## on a GeoIP lookup.
-		orig_region: string &optional &log;
-		## Cityfor the responser of the connection based
-		## on a GeoIP lookup.
-		resp_region: string &optional &log;
-		## latitude for the originator of the connection based
-		## on a GeoIP lookup.
-		orig_lat: double &optional &log;
-		## longitude for the originator of the connection based
-		## on a GeoIP lookup.
-		orig_long: double &optional &log;
-		## latitudefor the responser of the connection based
-		## on a GeoIP lookup.
-		resp_lat: double &optional &log;
-		## longitude for the responser of the connection based
-		## on a GeoIP lookup.
-		resp_long: double &optional &log;
-	};
-}
+redef record Conn::Info += {
+	## Country code for the originator of the connection based
+	## on a GeoIP lookup.
+	orig_cc: string &optional &log;
+	## Country code for the responser of the connection based
+	## on a GeoIP lookup.
+	resp_cc: string &optional &log;
+	## City for the originator of the connection based
+	## on a GeoIP lookup.
+	orig_city: string &optional &log;
+	## Cityfor the responser of the connection based
+	## on a GeoIP lookup.
+	resp_city: string &optional &log;
+	## City for the originator of the connection based
+	## on a GeoIP lookup.
+	orig_region: string &optional &log;
+	## Cityfor the responser of the connection based
+	## on a GeoIP lookup.
+	resp_region: string &optional &log;
+	## latitude for the originator of the connection based
+	## on a GeoIP lookup.
+	orig_lat: double &optional &log;
+	## longitude for the originator of the connection based
+	## on a GeoIP lookup.
+	orig_long: double &optional &log;
+	## latitudefor the responser of the connection based
+	## on a GeoIP lookup.
+	resp_lat: double &optional &log;
+	## longitude for the responser of the connection based
+	## on a GeoIP lookup.
+	resp_long: double &optional &log;
+};
+
 
 event connection_state_remove(c: connection)
 	{
