@@ -112,6 +112,7 @@ services:
     volumes:
       - ./zeek/logs:/pcap
       - ./zeek/config/local.zeek:/usr/local/zeek/share/zeek/site/local.zeek
+      - geoip:/usr/share/GeoIP
     cap_add:
       - NET_ADMIN
     network_mode: 'host'
