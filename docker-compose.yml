@@ -158,6 +158,7 @@ services:
       - ./arkime/startarkime.sh:/data/startarkime.sh:rw
       - ./arkime/parseenv.sh:/data/parseenv.sh:rw
       - ./elasticsearch/secrets:/usr/share/arkime/config/certs
+      - geoip:/usr/share/GeoIP
     network_mode: 'host'
     environment:
       - CAPTURE=on
@@ -169,5 +170,19 @@ services:
       - ARKIME_PASS=${ARKIME_PASS}
     depends_on:
       - elasticsearch
+
+  geoip:
+    container_name: geoip
+    image: maxmindinc/geoipupdate:latest
+    environment:
+      - GEOIPUPDATE_ACCOUNT_ID=${GEOIPUPDATE_ACCOUNT_ID}
+      - GEOIPUPDATE_LICENSE_KEY=${GEOIPUPDATE_LICENSE_KEY}
+      - GEOIPUPDATE_EDITION_IDS=${GEOIPUPDATE_EDITION_IDS}
+      - GEOIPUPDATE_FREQUENCY=12
+    volumes:
+      - geoip:/usr/share/GeoIP
+volumes:
+  geoip:
+
 networks:
   elk:
