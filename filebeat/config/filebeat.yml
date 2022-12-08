@@ -16,13 +16,13 @@ filebeat.inputs:
   #   id: zeek-stream
   #   index: 'zeek-%{+yyyy.MM.dd}'
 
-  - input_type: log
-    enabled: true
-    paths:
-      - /logs/suricata/*.log
-      #- /logs/suricata/*.json
-    id: suricata-stream
-    index: 'suricata-%{+yyyy.MM.dd}'
+  # - input_type: log
+  #   enabled: true
+  #   paths:
+  #     - /logs/suricata/*.log
+  #     #- /logs/suricata/*.json
+  #   id: suricata-stream
+  #   index: 'suricata-%{+yyyy.MM.dd}'
 
 filebeat.modules:
   - module: zeek
