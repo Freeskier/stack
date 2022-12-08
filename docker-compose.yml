@@ -91,7 +91,7 @@ services:
     command: filebeat -e -strict.perms=false
     restart: always
     volumes:
-      - ./filebeat/config/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - ./filebeat/config/filebeat.yml:/usr/share/filebeat/filebeat.yml:rw
       - ./zeek/logs:/logs/zeek:rw
       - ./suricata/logs:/logs/suricata:rw
       - ./arkime/logs:/logs/arkime:rw

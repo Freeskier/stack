@@ -112,8 +112,8 @@ redef Site::local_nets += { 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16 };
 @load file-extraction
 
 # JSON Plugin
-@load json-streaming-logs
-redef JSONStreaming::disable_default_logs=T;
+#@load json-streaming-logs
+#redef JSONStreaming::disable_default_logs=T;
 redef LogAscii::use_json=T;
 
 @load policy/tuning/json-logs.zeek
